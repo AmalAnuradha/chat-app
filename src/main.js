@@ -7,6 +7,7 @@ import VueSocketIO from 'vue-socket.io'
 import Chat from 'vue-beautiful-chat'
 import BootstrapVue from 'bootstrap-vue'
 import VueChatScroll from 'vue-chat-scroll'
+import VueResource from 'vue-resource'
 
 // Plugins
 import GlobalComponents from './gloablComponents'
@@ -26,7 +27,7 @@ import 'semantic-ui-css/semantic.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './style.css'
 
-Vue.prototype.$tmauserid = '5c0df1275b18020ccf928597'
+Vue.prototype.$tmauserid = ''
 
 // plugin setup
 Vue.use(VueRouter)
@@ -38,10 +39,11 @@ Vue.use(SuiVue)
 Vue.use(Chat)
 Vue.use(BootstrapVue)
 Vue.use(VueChatScroll)
+Vue.use(VueResource)
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: 'http://localhost:3000?id=' + Vue.prototype.$tmauserid,
+  connection: 'http://192.168.0.66:3000?id=' + localStorage.getItem('userid'),
   transports: ['websocket', 'polling', 'flashsocket']
 }))
 
