@@ -1,0 +1,11 @@
+#message-container{
+    height: 75vh;
+    overflow-y: scroll;
+}
+.s-m-contianer{
+    display: flex;
+    margin-top: 10px;
+}
+.s-m-contianer > div{
+    flex: 1;
+}

@@ -1,162 +1,117 @@
 <template>
-  <div>
     <div>
-    <beautiful-chat
-      :participants="participants"
-      :titleImageUrl="titleImageUrl"
-      :onMessageWasSent="onMessageWasSent"
-      :messageList="messageList"
-      :newMessagesCount="newMessagesCount"
-      :isOpen="isChatOpen"
-      :close="closeChat"
-      :open="openChat"
-      :showEmoji="true"
-      :showFile="true"
-      :showTypingIndicator="showTypingIndicator"
-      :colors="colors"
-      :alwaysScrollToBottom="alwaysScrollToBottom"
-      :messageStyling="messageStyling" />
-  </div>
-  </div>
+    <div class="form-group">
+      
+      <sui-dropdown
+    
+          placeholder="Select Friend"
+          selection
+          :options="options"
+          v-model="current"
+
+          v-on:click="selectFriend(current)"
+        />
+    </div>
+    
+    <div id="message-container" v-chat-scroll v-if="messages.length > 0">
+      <div  v-if="messages"  v-for="message in messages" v-bind:key="message._id">
+      <sui-message style="float: left;width:55%;" v-if="message.from && message.to && message.from._id == current && message.to._id == userid"
+        icon="inbox"
+        v-bind:header=message.to.firstname
+        v-bind:content=message.message
+      />
+      <div style="clear:both;"></div>
+      <sui-message style="float:right;width:55%;margin-top: 0;margin-bottom:1em;" v-if="message.from && message.to && message.from._id == userid && message.to._id == current"
+        icon="inbox"
+        v-bind:header=message.to.firstname
+        v-bind:content=message.message
+      />
+      <div style="clear:both;"></div>
+      </div>
+    </div>
+       <div class="row">
+      <div class="col-md-12 s-m-contianer">
+          <div class="ui action left icon input">
+            <i class="mail icon"></i> 
+            <input type="text" placeholder="Message..." v-model="messageToSend"> 
+            <div class="ui teal button" v-on:click="onMessageWasSent(messageToSend)">Send</div>
+          </div>
+      </div>  
+    </div>
+   </div>
+  
 </template>
 <script>
-// export default {
-//   data () {
-
-//     return {
-//       messages: []
-//     }
-//   },
-//   sockets: {
-//     connect: function () {
-//       console.log('socket connected')
-//       this.$socket.emit('user_messages', {
-//         from: '5bf28ce7c42b0838623f493c'
-//       })
-//     },
-//     user_messages: function (data) {
-//       console.log(
-//         data
-//       )
-//       this.messages = data
-//     },
-//     message: function (data) {
-//       console.log(
-//         data
-//       )
-//       this.messages.push(data)
-//       this.$socket.emit('recieve message', [data._id])
-//     }
-//   },
-//   methods: {
-//     clickButton: function (data) {
-//       // $socket is socket.io-client instance
-//       this.$socket.emit('emit_method', data)
-//     }
-//   }
-// }
 export default {
-  name: 'app',
   data () {
     return {
-      participants: [
-        {
-          id: '5c0df1275b18020ccf928597',
-          name: 'Matteo',
-          imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
-        },
-        {
-          id: '5bf28ce7c42b0838623f493c',
-          name: 'Support',
-          imageUrl: 'https://avatars3.githubusercontent.com/u/37018832?s=200&v=4'
-        }
-      ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
-      titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
-      messageList: [], // the list of the messages to show, can be paginated and adjusted dynamically
-      newMessagesCount: 0,
-      isChatOpen: true, // to determine whether the chat window should be open or closed
-      showTypingIndicator: '', // when set to a value matching the participant.id it shows the typing indicator for the specific user
-      colors: {
-        header: {
-          bg: '#4e8cff',
-          text: '#ffffff'
-        },
-        launcher: {
-          bg: '#4e8cff'
-        },
-        messageList: {
-          bg: '#ffffff'
-        },
-        sentMessage: {
-          bg: '#4e8cff',
-          text: '#ffffff'
-        },
-        receivedMessage: {
-          bg: '#eaeaea',
-          text: '#222222'
-        },
-        userInput: {
-          bg: '#f4f7f9',
-          text: '#565867'
-        }
-      }, // specifies the color scheme for the component
-      alwaysScrollToBottom: false, // when set to true always scrolls the chat to the bottom when new events are in (new message, user starts typing...)
-      messageStyling: true // enables *bold* /emph/ _underline_ and such (more info at github.com/mattezza/msgdown)
+      current: null,
+      options: [],
+      messageToSend: '',
+      userid: '',
+      messages: []
     }
   },
   sockets: {
     connect: function () {
       console.log('socket connected')
-      this.$socket.emit('user_messages', {
-        from: '5bf28ce7c42b0838623f493c',
-        to: '5c0df1275b18020ccf928597'
-      })
     },
     user_messages: function (data) {
-      console.log(data)
-      for (let i = 0; i < data.length; i++) {
-        let tempMessage = {
-          text: data[i].message
-        }
-        let message
-        if (data[i].from._id === '5bf28ce7c42b0838623f493c') {
-          message = { author: data[i].from._id, type: 'text', data: tempMessage }
-        } else if (data[i].from._id === '5c0df1275b18020ccf928597') {
-          message = { author: data[i].from._id, type: 'text', data: tempMessage }
-        }
-        this.messageList.push(message)
-      }
+      console.log(this.$tmauserid)
+      this.messages = data
+      console.log(this.messages)
     },
     message: function (data) {
-      console.log(
-        data
-      )
-      let tempMessage = {
-        text: data.message
-      }
-      let message = {author: '5bf28ce7c42b0838623f493c', type: 'text', data: tempMessage}
-      this.messageList.push(message)
+      this.messages.push(data)
       this.$socket.emit('recieve message', [data._id])
+      console.log(data)
+    },
+    friends: function (data) {
+      for (let user of data) {
+        console.log('friends: ' + user)
+        let friend = {
+          key: user.to._id,
+          text: user.to.firstname + ' ' + user.to.lastname,
+          value: user.to._id,
+          image: { avatar: true, src: 'static/images/avatar/small/jenny.jpg' }
+        }
+        this.options.push(friend)
+      }
     }
   },
+  mounted: function () {
+    this.userid = this.$tmauserid
+  },
   methods: {
-    sendMessage (text) {
-      console.log(text)
-      if (text.length > 0) {
-        this.newMessagesCount = this.isChatOpen ? this.newMessagesCount : this.newMessagesCount + 1
-        this.onMessageWasSent({ author: '5c0df1275b18020ccf928597', type: 'text', data: { text } })
+    selectFriend: function (current) {
+      if (this.current) {
+        this.$socket.emit('user_messages', {
+          from: this.current,
+          to: this.userid
+        })
       }
     },
     onMessageWasSent (message) {
-      console.log(message)
       this.$socket.emit('message',
         {
-          'message': message.data.text,
-          'to': '5bf28ce7c42b0838623f493c'
+          'message': message,
+          'to': this.current
         })
       // called when the user sends a message
-      this.messageList = [ ...this.messageList, message ]
+      let messageToShow = message
+      message = {
+        to: {
+          firstname: 'namal',
+          _id: this.current
+        },
+        from: {
+          _id: this.userid,
+          firstname: 'newuser'
+        },
+        message: messageToShow
+      }
       console.log(message)
+      this.messages.push(message)
     },
     openChat () {
       // called when the user clicks on the fab button to open the chat
