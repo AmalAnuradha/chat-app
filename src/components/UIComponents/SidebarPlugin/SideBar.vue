@@ -11,7 +11,7 @@
             <div class="logo-img">
                 <img src="static/img/vue-logo.png" alt="">
             </div>
-          Paper Dashboard
+          {{this.user.firstname.charAt(0).toUpperCase() + this.user.firstname.slice(1) + " " +  this.user.lastname.charAt(0).toUpperCase() + this.user.lastname.slice(1) || "Private Chat"}}
         </a>
       </div>
       <slot>
@@ -70,6 +70,12 @@
     components: {
       MovingArrow
     },
+    created () {
+      let user = JSON.parse(localStorage.getItem('user'))
+      if (user) {
+        this.user = user
+      }
+    },
     computed: {
       sidebarClasses () {
         if (this.type === 'sidebar') {
@@ -97,7 +103,7 @@
       return {
         linkHeight: 60,
         activeLinkIndex: 0,
-
+        user: '',
         windowWidth: 0,
         isWindows: false,
         hasAutoHeight: false

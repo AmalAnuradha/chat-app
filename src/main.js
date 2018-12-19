@@ -8,6 +8,7 @@ import Chat from 'vue-beautiful-chat'
 import BootstrapVue from 'bootstrap-vue'
 import VueChatScroll from 'vue-chat-scroll'
 import VueResource from 'vue-resource'
+import Meta from 'vue-meta'
 
 // Plugins
 import GlobalComponents from './gloablComponents'
@@ -40,6 +41,15 @@ Vue.use(Chat)
 Vue.use(BootstrapVue)
 Vue.use(VueChatScroll)
 Vue.use(VueResource)
+Vue.use(Meta)
+
+Vue.http.interceptors.push((request, next) => {
+  let user = JSON.parse(localStorage.getItem('user'))
+  if (user && user.token) {
+    request.headers.set('Authorization', user.token)
+  }
+  next()
+})
 
 Vue.use(new VueSocketIO({
   debug: true,

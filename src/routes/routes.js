@@ -8,21 +8,28 @@ import UserProfile from 'src/components/Dashboard/Views/UserProfile.vue'
 import Notifications from 'src/components/Dashboard/Views/Notifications.vue'
 import Icons from 'src/components/Dashboard/Views/Icons.vue'
 import Maps from 'src/components/Dashboard/Views/Maps.vue'
-import Typography from 'src/components/Dashboard/Views/Typography.vue'
-import TableList from 'src/components/Dashboard/Views/TableList.vue'
+import Register from 'src/components/Dashboard/Views/Register.vue'
+import GroupMessages from 'src/components/Dashboard/Views/GroupMessages.vue'
 import Messages from 'src/components/Dashboard/Views/Messages.vue'
 import Login from 'src/components/Dashboard/Views/Login.vue'
+import Pair from 'src/components/Dashboard/Views/Pair.vue'
+import GroupConfig from 'src/components/Dashboard/Views/ChatRoomConfig.vue'
 
 const routes = [
   {
     path: '/',
-    component: DashboardLayout,
-    redirect: '/admin/overview'
+    component: Login,
+    redirect: '/login'
   },
   {
     path: '/login',
     name: 'login',
     component: Login
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: Register
   },
   {
     path: '/admin',
@@ -55,19 +62,29 @@ const routes = [
         component: Messages
       },
       {
+        path: 'pair',
+        name: 'friends',
+        component: Pair
+      },
+      {
         path: 'maps',
         name: 'maps',
         component: Maps
       },
       {
-        path: 'typography',
-        name: 'typography',
-        component: Typography
+        path: 'signup',
+        name: 'signup',
+        component: Register
       },
       {
-        path: 'table-list',
-        name: 'table-list',
-        component: TableList
+        path: 'groupmessages',
+        name: 'groupmessages',
+        component: GroupMessages
+      },
+      {
+        path: 'group/config',
+        name: 'groupConfig',
+        component: GroupConfig
       }
     ]
   },

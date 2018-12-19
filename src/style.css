@@ -9,3 +9,27 @@
 .s-m-contianer > div{
     flex: 1;
 }
+.container-login{
+    height: 100vh; 
+    display: flex !important; 
+    align-items: center; 
+    justify-content: center;
+}
+body, html{
+    height:100%;
+    width:100%;
+    padding:0px;
+    margin:0px;
+}
+form{
+    width:100%;
+    padding:0px;
+    margin:auto;
+}
+.isnew {
+    background-color: aqua !important;
+}
+.my-message{
+    background-color: beige;
+    color: lightseagreen;
+}    
